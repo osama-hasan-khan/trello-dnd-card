@@ -1,5 +1,7 @@
+import { useSortable } from "@dnd-kit/sortable";
 import TrashIcon from "../icons/TrashIcon";
 import { Column, Id } from "../types";
+import { CSS } from "@dnd-kit/utilities";
 
 interface Props {
   column: Column;
@@ -8,10 +10,30 @@ interface Props {
 
 const ColumnContainer = (props: Props) => {
   const { column, deleteColumn } = props;
+
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: column.id,
+      data: {
+        type: "Column",
+        column: column,
+      },
+    });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
   return (
-    <div className="bg-columnBackgroundColor w-[250px] h-[380px] rounded-md flex flex-col">
+    <div
+      style={style}
+      ref={setNodeRef}
+      className="bg-columnBackgroundColor w-[250px] h-[380px] rounded-md flex flex-col"
+    >
       {/* column title */}
       <div
+        {...attributes}
+        {...listeners}
         className="bg-mainBackgroundColor text-sm font-mono
        cursor-grab rounded-md h-[40px] rounded-b-none p-2
        font-bold border-columnBackgroundColor border-4 flex items-center justify-between"
